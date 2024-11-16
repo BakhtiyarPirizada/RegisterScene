@@ -20,28 +20,14 @@ class LoginController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var titleLabel: UILabel = {
-        let l = UILabel()
-        l.text = "Welcome"
-        l.textAlignment = .center
-        l.numberOfLines = 0
-        l.font = UIFont.systemFont(ofSize: 36, weight: .heavy)
-        l.textColor = .black
+    private var titleLabel: ReusableLabel{
+        let l = ReusableLabel(title: "Welcome", size: 36)
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
-    }()
+    }
     
-    private lazy var emailText: UITextField = {
-        let t = UITextField()
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Enter your email"
-        t.textColor = .black
-        t.delegate = self
-        t.leftView = paddingView
-        t.leftViewMode = .always
-        t.layer.cornerRadius = 12
+    private lazy var emailText:  ReusableText = {
+        let t = ReusableText(title:"Enter your email")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
@@ -64,19 +50,11 @@ class LoginController: BaseViewController {
             eyeButton.widthAnchor.constraint(equalToConstant: 24),
             eyeButton.heightAnchor.constraint(equalToConstant: 24),
         ])
-        
         return container
     }()
     
-    private lazy var passwordText: UITextField = {
-        let t = UITextField()
-        t.setLeftPadding(10)
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Enter your password"
-        t.textColor = .black
-        t.delegate = self
-        t.layer.cornerRadius = 12
+    private lazy var passwordText: ReusableText = {
+        let t = ReusableText(title:"Enter your password")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
@@ -124,15 +102,11 @@ class LoginController: BaseViewController {
         return b
     }()
     
-    private lazy var loginButton: UIButton = {
-        let b = UIButton()
+    private lazy var loginButton:ReusableButton = {
+        let b = ReusableButton(title: "Login") {
+            [weak self] in self?.loginClicked()
+        }
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.setTitle("Login", for: .normal)
-        b.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        b.titleLabel?.textColor = .white
-        b.backgroundColor = .buttonBGcolor
-        b.addTarget(self, action: #selector(LoginClicked), for: .touchUpInside)
-        b.layer.cornerRadius = 12
         return b
     }()
     
@@ -201,7 +175,7 @@ class LoginController: BaseViewController {
         self.viewModel.delegate = self
     }
     
-    @objc fileprivate func LoginClicked() {
+    @objc fileprivate func loginClicked() {
         viewModel.logEmail = emailText.text ?? ""
         viewModel.logPassword =  passwordText.text ?? ""
         if !emailText.text!.isEmpty && !passwordText.text!.isEmpty {

@@ -20,73 +20,32 @@ class RegisterController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var titleLabel: UILabel = {
-        let l = UILabel()
-        l.text = "Create Account"
-        l.textAlignment = .center
-        l.numberOfLines = 0
-        l.font = UIFont.systemFont(ofSize: 36, weight: .heavy)
-        l.textColor = .black
+    private var titleLabel: ReusableLabel{
+        let l = ReusableLabel(title: "Create Account", size: 36)
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
-    }()
+    }
     
-    private lazy var nameText: UITextField = {
-        let t = UITextField()
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Name"
-        t.textColor = .black
-        t.delegate = self
-        t.leftView = paddingView
-        t.leftViewMode = .always
-        t.layer.cornerRadius = 12
+    private lazy var nameText: ReusableText = {
+        let t = ReusableText(title:"Name")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
     
-    private lazy var surnameText: UITextField = {
-        let t = UITextField()
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Surname"
-        t.textColor = .black
-        t.delegate = self
-        t.leftView = paddingView
-        t.leftViewMode = .always
-        t.layer.cornerRadius = 12
+    private lazy var surnameText: ReusableText = {
+        let t = ReusableText(title:"Surname")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
     
-    private lazy var numberText: UITextField = {
-        let t = UITextField()
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Phone number "
-        t.textColor = .black
-        t.delegate = self
-        t.leftView = paddingView
-        t.leftViewMode = .always
-        t.layer.cornerRadius = 12
+    private lazy var numberText:ReusableText = {
+        let t = ReusableText(title:"Phone number")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
     
-    private lazy var emailText: UITextField = {
-        let t = UITextField()
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Valid email"
-        t.textColor = .black
-        t.delegate = self
-        t.leftView = paddingView
-        t.leftViewMode = .always
-        t.layer.cornerRadius = 12
+    private lazy var emailText: ReusableText = {
+        let t = ReusableText(title:"Valid email")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
@@ -113,15 +72,8 @@ class RegisterController: BaseViewController {
         return container
     }()
     
-    private lazy var passwordText: UITextField = {
-        let t = UITextField()
-        t.layer.borderWidth = 1.0
-        t.layer.borderColor = UIColor.lightGray.cgColor
-        t.placeholder = "Strong password"
-        t.textColor = .black
-        t.delegate = self
-        t.setLeftPadding(10)
-        t.layer.cornerRadius = 12
+    private lazy var passwordText: ReusableText = {
+        let t = ReusableText(title:"Strong password")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
@@ -168,15 +120,11 @@ class RegisterController: BaseViewController {
         return b
     }()
     
-    private lazy var signUp: UIButton = {
-        let b = UIButton()
+    private lazy var signUp: ReusableButton = {
+        let b = ReusableButton(title: "Sign Up") {
+            [weak self] in self?.signUpClicked()
+        }
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.setTitle("Sign Up", for: .normal)
-        b.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        b.titleLabel?.textColor = .white
-        b.backgroundColor = .buttonBGcolor
-        b.addTarget(self, action: #selector(signUpClicked), for: .touchUpInside)
-        b.layer.cornerRadius = 12
         return b
     }()
     
