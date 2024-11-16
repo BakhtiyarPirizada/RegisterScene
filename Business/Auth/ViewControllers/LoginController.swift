@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 class LoginController: BaseViewController {
-    
+   
     private var viewModel : AuthViewModel
     
     init(viewModel: AuthViewModel) {
@@ -108,6 +108,7 @@ class LoginController: BaseViewController {
         let s = UIStackView(arrangedSubviews: [emailText, passwordContainer])
         scrollView.addSubview(s)
         s.axis = .vertical
+        
         s.spacing = 12
         s.translatesAutoresizingMaskIntoConstraints = false
         return s
@@ -193,8 +194,7 @@ class LoginController: BaseViewController {
     }
     
     fileprivate func configureText() {
-        emailText.delegate = self
-        passwordText.delegate = self
+        [emailText,passwordText].forEach {$0.delegate = self}
     }
     
     fileprivate func configureViewModel() {
@@ -206,18 +206,21 @@ class LoginController: BaseViewController {
         viewModel.logPassword =  passwordText.text ?? ""
         if !emailText.text!.isEmpty && !passwordText.text!.isEmpty {
             if viewModel.checkUser() {
-                let controller = MainController()
-                navigationController?.pushViewController(controller, animated: true)
-            } else {showMessage(title: "Warning",message: "User is not found")}
-        }else {showMessage(title: "Warning",message: "Fields cannot be emtpy")}
+                UserDefaultsHelper.setBool(key: "isLogin", value: true)
+                let scene = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
+                scene?.switchToMain()
+            } else {
+                UserDefaultsHelper.setBool(key: "isLogin", value: false)
+                showMessage(title: "Warning",message: "User is not found")}
+        } else {showMessage(title: "Warning",message: "Fields cannot be emtpy")}
     }
     
-    @objc func togglePasswordVisibility() {
+    @objc fileprivate func togglePasswordVisibility() {
         passwordText.isSecureTextEntry.toggle()
         eyeButton.isSelected.toggle()
     }
     
-    @objc  func showRegister(){
+    @objc fileprivate func showRegister(){
         navigationController?.popViewController(animated: true)
     }
 }
@@ -238,5 +241,4 @@ extension LoginController:AuthSenderDelegate {
    
 }
 
-//
 

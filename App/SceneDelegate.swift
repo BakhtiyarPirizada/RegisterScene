@@ -10,17 +10,38 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var isLogin: Bool = UserDefaultsHelper.getBool(key: "isLogin")
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let newWindow = UIWindow(windowScene: windowScene)
-        let controller =  RegisterController(viewModel: AuthViewModel())
-        let navController = UINavigationController(rootViewController: controller)
-        newWindow.rootViewController = navController
-        window = newWindow
+        window = isLogin ? showMain(scene: windowScene) : showRegister(scene: windowScene)
         window?.makeKeyAndVisible()
          guard let _ = (scene as? UIWindowScene) else { return }
+    }
+    private func showMain(scene: UIWindowScene) -> UIWindow  {
+        let controller = TabBarController()
+        let navigationController = UINavigationController(rootViewController: controller)
+        let newWindow = UIWindow(windowScene: scene)
+        newWindow.rootViewController = navigationController
+        return newWindow
+    }
+    private func showRegister(scene: UIWindowScene) -> UIWindow  {
+        let controller = RegisterController(viewModel: AuthViewModel())
+        let navigationController = UINavigationController(rootViewController: controller)
+        let newWindow = UIWindow(windowScene: scene)
+        newWindow.rootViewController = navigationController
+        return newWindow
+    }
+    func switchToMain() {
+        guard let windowScene = window?.windowScene else {return}
+        window = showMain(scene: windowScene)
+        window?.makeKeyAndVisible()
+    }
+    func switchToRegister() {
+        guard let windowScene = window?.windowScene else {return}
+        window = showRegister(scene: windowScene)
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

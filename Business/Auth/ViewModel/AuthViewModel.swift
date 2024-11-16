@@ -24,7 +24,7 @@ class AuthViewModel {
     lazy var logEmail = ""
     lazy var logPassword = ""
     
-    open func createUser() {
+    func createUser() {
         let user = User()
         user.name = username
         user.surname = surname
@@ -35,43 +35,37 @@ class AuthViewModel {
         delegate?.defaultUserDelegate(user: user)
     }
     
-    open func checkUser() -> Bool{
-        var result = false
+    func checkUser() -> Bool {
         getList()
         guard let users = Users else {return false}
-        for user in users {
-            if user.email == logEmail && user.password == logPassword {
-                result = true
-            }
-        }
-        return result
+        return users.contains {$0.email == logEmail && $0.password == logPassword}
     }
-
-    open func checkValidation() {
-        if !username.isEmpty || !surname.isEmpty || !number.isEmpty || !email.isEmpty || !password.isEmpty {
-            if username.isValidName(){
-                if surname.isValidLastname() {
-                    if number.isValidPhoneNumber(){
-                        if email.isValidEmail() {
-                            if password.isValidPass() {
-                                createUser()
-                            }else { delegate?.errorMessage(error: "Password must be minimum 8 characters")}
-                        }else {delegate?.errorMessage(error: "Email must be email format")}
-                    }else {delegate?.errorMessage(error: "Phone number must be 994 format ")}
-                }else{delegate?.errorMessage(error: "Surname must be minimum 5 characters")}
-            }else {delegate?.errorMessage(error: "Username must be minimum 3 characters")}
-        }else{ delegate?.errorMessage(error: "Fields cannot be emtpy")}
+    
+    func checkValidation() {
+        guard !username.isEmpty,!surname.isEmpty,!number.isEmpty,!email.isEmpty , !password.isEmpty
+        else {return showError(message: "Fields cannot be emtpy")}
+        guard username.isValidName() else {return showError(message: "Username must be minimum 3 characters")}
+        guard surname.isValidLastname() else {return showError(message: "Surname must be minimum 5 characters")}
+        guard number.isValidPhoneNumber() else {return showError(message: "Phone number must be 994 format")}
+        guard email.isValidEmail() else {return showError(message: "Email must be email format")}
+        guard password.isValidPass() else {return showError(message: "Password must be minimum 8 characters")}
+        createUser()
+        
     }
-   
-    open func getList() {
+    
+    func showError(message:String) {
+        delegate?.errorMessage(error: message)
+    }
+    
+    func getList() {
         let results = realm.objects(User.self)
         Users = results
     }
     
-    open func writeRealm(model:Object) {
+    func writeRealm(model:Object) {
         try! realm.write {
             realm.add(model)
         }
     }
-   
+    
 }

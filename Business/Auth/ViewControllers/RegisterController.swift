@@ -19,7 +19,7 @@ class RegisterController: BaseViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private lazy var titleLabel: UILabel = {
         let l = UILabel()
         l.text = "Create Account"
@@ -32,7 +32,7 @@ class RegisterController: BaseViewController {
     }()
     
     private lazy var nameText: UITextField = {
-       let t = UITextField()
+        let t = UITextField()
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
         t.layer.borderWidth = 1.0
         t.layer.borderColor = UIColor.lightGray.cgColor
@@ -47,7 +47,7 @@ class RegisterController: BaseViewController {
     }()
     
     private lazy var surnameText: UITextField = {
-       let t = UITextField()
+        let t = UITextField()
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
         t.layer.borderWidth = 1.0
         t.layer.borderColor = UIColor.lightGray.cgColor
@@ -62,7 +62,7 @@ class RegisterController: BaseViewController {
     }()
     
     private lazy var numberText: UITextField = {
-       let t = UITextField()
+        let t = UITextField()
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
         t.layer.borderWidth = 1.0
         t.layer.borderColor = UIColor.lightGray.cgColor
@@ -75,9 +75,9 @@ class RegisterController: BaseViewController {
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
-
+    
     private lazy var emailText: UITextField = {
-       let t = UITextField()
+        let t = UITextField()
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: t.frame.height))
         t.layer.borderWidth = 1.0
         t.layer.borderColor = UIColor.lightGray.cgColor
@@ -97,24 +97,24 @@ class RegisterController: BaseViewController {
         container.layer.cornerRadius = 12
         container.addSubview(passwordText)
         container.addSubview(eyeButton)
-
+        
         NSLayoutConstraint.activate([
             passwordText.topAnchor.constraint(equalTo: container.topAnchor),
             passwordText.leftAnchor.constraint(equalTo: container.leftAnchor),
             passwordText.rightAnchor.constraint(equalTo: container.rightAnchor),
             passwordText.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-
+            
             eyeButton.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             eyeButton.rightAnchor.constraint(equalTo: container.rightAnchor, constant: -10),
             eyeButton.widthAnchor.constraint(equalToConstant: 24),
             eyeButton.heightAnchor.constraint(equalToConstant: 24),
         ])
-
+        
         return container
     }()
     
     private lazy var passwordText: UITextField = {
-       let t = UITextField()
+        let t = UITextField()
         t.layer.borderWidth = 1.0
         t.layer.borderColor = UIColor.lightGray.cgColor
         t.placeholder = "Strong password"
@@ -125,9 +125,9 @@ class RegisterController: BaseViewController {
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
     }()
-  
+    
     private lazy var alreadyMemberLabel: UILabel = {
-       let l = UILabel()
+        let l = UILabel()
         l.text = "Already a member? Login"
         l.textAlignment = .center
         l.numberOfLines = 1
@@ -186,16 +186,13 @@ class RegisterController: BaseViewController {
         print("Realm is located at:", realm.configuration.fileURL!)
         
     }
-
+    
     override func configureUI() {
-     super.configureUI()
-     view.addSubview(titleLabel)
-     view.addSubview(scrollView)
-     view.addSubview(signUp)
-     view.addSubview(alreadyMemberLabel)
-     configureConstraints()
-     configureText()
-     configureViewModel()
+        super.configureUI()
+        [titleLabel,scrollView,signUp,alreadyMemberLabel].forEach {view.addSubview($0)}
+        configureConstraints()
+        configureText()
+        configureViewModel()
     }
     
     override func configureConstraints() {
@@ -210,7 +207,7 @@ class RegisterController: BaseViewController {
             scrollView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24),
             scrollView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24),
             scrollView.bottomAnchor.constraint(equalTo: signUp.topAnchor, constant: -52)
-
+            
         ])
         NSLayoutConstraint.activate([
             nameText.heightAnchor.constraint(equalToConstant: 48),
@@ -240,8 +237,8 @@ class RegisterController: BaseViewController {
             alreadyMemberLabel.topAnchor.constraint(equalTo: signUp.bottomAnchor, constant: 8),
             alreadyMemberLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24),
             alreadyMemberLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24),
-         
-
+            
+            
         ])
     }
     
@@ -249,27 +246,23 @@ class RegisterController: BaseViewController {
         viewModel.delegate = self
     }
     
+    fileprivate func configureText() {
+        [nameText,surnameText,numberText,emailText,passwordText].forEach {$0.delegate = self}
+    }
+    
     @objc fileprivate func signUpClicked() {
         viewModel.checkValidation()
         showLogin()
     }
     
-    @objc func togglePasswordVisibility() {
-           passwordText.isSecureTextEntry.toggle()
-           eyeButton.isSelected.toggle()
-       }
-    
-    @objc func showLogin(){
-        let controller = LoginController(viewModel: self.viewModel)
-        navigationController?.pushViewController(controller, animated: true)
+    @objc fileprivate func togglePasswordVisibility() {
+        passwordText.isSecureTextEntry.toggle()
+        eyeButton.isSelected.toggle()
     }
     
-    fileprivate func configureText() {
-        nameText.delegate = self
-        surnameText.delegate = self
-        numberText.delegate = self
-        emailText.delegate = self
-        passwordText.delegate = self
+    @objc fileprivate func showLogin(){
+        let controller = LoginController(viewModel: self.viewModel)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
