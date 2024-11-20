@@ -11,7 +11,7 @@ protocol AuthSenderDelegate: AnyObject {
 import RealmSwift
 import Foundation
 
-class AuthViewModel {
+final class AuthViewModel {
     
     private var Users: Results<User>?
     private let realm = try! Realm()

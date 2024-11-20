@@ -20,11 +20,11 @@ class RegisterController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var titleLabel: ReusableLabel{
+    private lazy var titleLabel: ReusableLabel = {
         let l = ReusableLabel(title: "Create Account", size: 36)
         l.translatesAutoresizingMaskIntoConstraints = false
-        return l
-    }
+        return l 
+    }()
     
     private lazy var nameText: ReusableText = {
         let t = ReusableText(title:"Name")
