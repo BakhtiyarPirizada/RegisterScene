@@ -14,6 +14,11 @@ extension String {
         return emailPredicate.evaluate(with: self)
     }
 }
+extension UIView {
+    func addViews(view:[UIView]){
+        view.forEach {self.addSubview($0)}
+    }
+}
 extension UIViewController {
     func showMessage(
         title: String = "",
@@ -121,17 +126,17 @@ extension String {
     }
 }
 
-
-
-
-
 extension UILabel {
-    func setLeftPaddingForLabel(_ amount: CGFloat) {
-        let padding = UIEdgeInsets(top: 0, left: amount, bottom: 0, right: 0)
-        self.drawText(in: self.bounds.inset(by: padding))
+    func setLeftPaddingForLabel(padding: CGFloat) {
+            let paddingString = String(repeating: " ", count: Int(padding))  
+            if let currentText = self.text {
+                let fullString = paddingString + currentText
+                self.text = fullString
+            }
+        }
     }
-}
 
+    
 
 
 extension UIButton {

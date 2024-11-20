@@ -96,7 +96,7 @@ class MainController: BaseViewController {
             stackView.topAnchor.constraint(equalTo: cardCollection.bottomAnchor, constant: 60),
             stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 60),
             stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -60),
-           
+            
         ])
         NSLayoutConstraint.activate([
             addCard.heightAnchor.constraint(equalToConstant: 40),
@@ -143,9 +143,9 @@ class MainController: BaseViewController {
     @objc func transferClicked() {
         let controller  = TransferController()
         navigationController?.pushViewController(controller, animated: true)
-   
+        
     }
- 
+    
 }
 extension MainController:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

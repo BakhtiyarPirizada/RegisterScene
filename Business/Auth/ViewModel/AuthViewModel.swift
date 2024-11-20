@@ -4,18 +4,18 @@
 //
 //  Created by Bakhtiyar Pirizada on 09.11.24.
 //
-protocol AuthSenderDelegate: AnyObject {
-    func errorMessage(error: String)
-    func defaultUserDelegate(user:User)
-}
+
 import RealmSwift
 import Foundation
 
 final class AuthViewModel {
     
+    enum ViewState {
+        case error(message:String)
+    }
+    var callback:((ViewState)->Void)?
     private var Users: Results<User>?
     private let realm = try! Realm()
-    weak var delegate : (AuthSenderDelegate)?
     lazy var username = ""
     lazy var surname = ""
     lazy var email = ""
@@ -32,7 +32,7 @@ final class AuthViewModel {
         user.password = password
         writeRealm(model: user)
         getList()
-        delegate?.defaultUserDelegate(user: user)
+  
     }
     
     func checkUser() -> Bool {
@@ -54,7 +54,7 @@ final class AuthViewModel {
     }
     
     func showError(message:String) {
-        delegate?.errorMessage(error: message)
+        callback?(.error(message: message))
     }
     
     func getList() {

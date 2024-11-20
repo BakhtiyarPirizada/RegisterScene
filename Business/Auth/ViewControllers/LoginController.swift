@@ -172,7 +172,14 @@ class LoginController: BaseViewController {
     }
     
     fileprivate func configureViewModel() {
-        self.viewModel.delegate = self
+//        viewModel.callback = { [weak self] state in
+//            switch state {
+//            case .error(let message):
+//                self?.showMessage(title: message)
+//            default:
+//                break
+//            }
+//        }
     }
     
     @objc fileprivate func loginClicked() {
@@ -203,16 +210,6 @@ extension LoginController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
 
     }
-}
-
-extension LoginController:AuthSenderDelegate {
-    func defaultUserDelegate(user: User) {
-        emailText.text = user.email
-        passwordText.text = user.password
-    }
-    
-    func errorMessage(error: String) {}
-   
 }
 
 

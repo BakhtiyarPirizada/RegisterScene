@@ -20,9 +20,9 @@ class ReusableText: UITextField, UITextFieldDelegate {
        layer.borderWidth = 1.0
        layer.borderColor = UIColor.lightGray.cgColor
        placeholder = title
+       setLeftPadding(8)
        textColor = .black
        delegate = self
-       setLeftPadding(10)
        layer.cornerRadius = 12
     }
 }

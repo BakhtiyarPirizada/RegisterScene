@@ -15,6 +15,7 @@ class Card: Object {
     @Persisted var pan: String?
     @Persisted var date: String?
     @Persisted var cvv: String?
+//    @Persisted var balance: Int = 10
     @Persisted var cardType: CardType?
 }
 

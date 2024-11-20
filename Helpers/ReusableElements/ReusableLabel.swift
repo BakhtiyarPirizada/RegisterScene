@@ -22,6 +22,7 @@ class ReusableLabel:UILabel {
         text = title
         textAlignment = .center
         numberOfLines = 0
+        setLeftPaddingForLabel(padding: 2)
         font = UIFont.systemFont(ofSize: size, weight: .heavy)
         textColor = .black
     }

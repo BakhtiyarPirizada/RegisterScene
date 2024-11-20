@@ -191,7 +191,12 @@ class RegisterController: BaseViewController {
     }
     
     fileprivate func configureViewModel() {
-        viewModel.delegate = self
+        viewModel.callback = { [weak self] state in
+            switch state {
+            case .error(let message):
+                self?.showMessage(title: message)
+            }
+        }
     }
     
     fileprivate func configureText() {
@@ -229,14 +234,6 @@ extension RegisterController: UITextFieldDelegate {
     }
 }
 
-extension RegisterController:AuthSenderDelegate {
-    func defaultUserDelegate(user: User) {}
-     
-    func errorMessage(error: String) {
-        showMessage(title: "Warning",message: error)
-    }
-
-}
 
 
 
