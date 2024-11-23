@@ -160,6 +160,10 @@ extension UITextField {
         self.attributedPlaceholder = NSAttributedString(string: text, attributes: attributes)
     }
 }
-
+extension String {
+    var last4Chars: String {
+        return String(self.suffix(4))
+    }
+}
 
 

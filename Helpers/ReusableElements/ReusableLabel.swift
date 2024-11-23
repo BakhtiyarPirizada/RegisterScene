@@ -5,7 +5,7 @@
 //  Created by Bakhtiyar Pirizada on 16.11.24.
 //
 import UIKit
-class ReusableLabel:UILabel {
+final class ReusableLabel:UILabel {
     private var title: String
     private var size: CGFloat
     init(title: String,size:CGFloat) {

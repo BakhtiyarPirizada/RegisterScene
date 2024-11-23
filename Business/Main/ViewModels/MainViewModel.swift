@@ -44,9 +44,11 @@ final class MainViewModel {
         let randomPan = String.generateRandomCardNumber(isVisa: isVisa)
         let expirationDate = String.generateCardExpiryDate()
         let cVV = String.generateRandomCVV()
+        let balance = 10
         card.pan = randomPan
         card.date = expirationDate
         card.cvv = cVV
+        card.balance = balance
         if isVisa == true {
             card.cardType = .visa
         } else {

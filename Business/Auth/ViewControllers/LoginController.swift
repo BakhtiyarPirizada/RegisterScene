@@ -172,19 +172,20 @@ class LoginController: BaseViewController {
     }
     
     fileprivate func configureViewModel() {
-//        viewModel.callback = { [weak self] state in
-//            switch state {
-//            case .error(let message):
-//                self?.showMessage(title: message)
-//            default:
-//                break
-//            }
-//        }
+        viewModel.callback = { [weak self] state in
+            switch state {
+         case .toLogin(email: let email, password: let password):
+                self?.emailText.text = email
+                self?.passwordText.text = password
+            default: break
+            }
+        }
     }
     
     @objc fileprivate func loginClicked() {
         viewModel.logEmail = emailText.text ?? ""
         viewModel.logPassword =  passwordText.text ?? ""
+        //TODO: bu yoxlanishlari vm'de edirsen sonrada state atirsan ona gore ekran deyushir
         if !emailText.text!.isEmpty && !passwordText.text!.isEmpty {
             if viewModel.checkUser() {
                 UserDefaultsHelper.setBool(key: "isLogin", value: true)
@@ -207,9 +208,9 @@ class LoginController: BaseViewController {
 }
 
 extension LoginController: UITextFieldDelegate {
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-
-    }
+//    func textFieldDidChangeSelection(_ textField: UITextField) {
+//
+//    }
 }
 
 

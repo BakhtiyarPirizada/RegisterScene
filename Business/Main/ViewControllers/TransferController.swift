@@ -8,6 +8,18 @@
 import UIKit
 
 class TransferController: BaseViewController {
+    
+    private var viewModel : TransferViewModel
+    
+    init(viewModel: TransferViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private lazy var selectFromLabel: ReusableLabel = {
         let l = ReusableLabel(title: "Select From", size: 18)
         l.backgroundColor = .gray.withAlphaComponent(0.3)
@@ -86,7 +98,7 @@ class TransferController: BaseViewController {
         b.setImage(UIImage(systemName: "chevron.down.circle"), for: .normal)
         b.tintColor = .gray
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.addTarget(self, action: #selector(downFromClicked), for: .touchUpInside)
+        b.addTarget(self, action: #selector(downClicked), for: .touchUpInside)
         return b
     }()
     private lazy var downToSelect: UIButton = {
@@ -94,7 +106,7 @@ class TransferController: BaseViewController {
         b.setImage(UIImage(systemName: "chevron.down.circle"), for: .normal)
         b.tintColor = .gray
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.addTarget(self, action: #selector(downToClicked), for: .touchUpInside)
+        b.addTarget(self, action: #selector(downClicked), for: .touchUpInside)
         return b
     }()
     private lazy var transferButton: ReusableButton = {
@@ -142,17 +154,8 @@ class TransferController: BaseViewController {
         
     }
     @objc fileprivate func transferClicked() {}
-    @objc fileprivate func downFromClicked() {
-        let listController = CardListController()
-        listController.modalPresentationStyle = .pageSheet
-        if let sheet = listController.sheetPresentationController {
-            sheet.detents = [.medium(),.large()]
-            sheet.prefersGrabberVisible = true
-        }
-        present(listController, animated: true)
-    }
-    @objc fileprivate func downToClicked() {
-        let listController = CardListController()
+    @objc fileprivate func downClicked() {
+        let listController = CardListController(viewModel:CardListViewModel())
         listController.modalPresentationStyle = .pageSheet
         if let sheet = listController.sheetPresentationController {
             sheet.detents = [.medium(),.large()]

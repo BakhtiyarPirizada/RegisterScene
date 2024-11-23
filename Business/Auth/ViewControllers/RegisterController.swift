@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RealmSwift
+import RealmSwift // ?? helper yazimali idi!
 class RegisterController: BaseViewController {
     
     private var viewModel = AuthViewModel()
@@ -38,7 +38,7 @@ class RegisterController: BaseViewController {
         return t
     }()
     
-    private lazy var numberText:ReusableText = {
+    private lazy var numberText: ReusableText = {
         let t = ReusableText(title:"Phone number")
         t.translatesAutoresizingMaskIntoConstraints = false
         return t
@@ -195,6 +195,7 @@ class RegisterController: BaseViewController {
             switch state {
             case .error(let message):
                 self?.showMessage(title: message)
+            default: break
             }
         }
     }
@@ -214,7 +215,7 @@ class RegisterController: BaseViewController {
     }
     
     @objc fileprivate func showLogin(){
-        let controller = LoginController(viewModel: self.viewModel)
+        let controller = LoginController(viewModel: viewModel.self)
         navigationController?.pushViewController(controller, animated: true)
     }
 }
@@ -226,7 +227,7 @@ extension RegisterController: UITextFieldDelegate {
         guard let surname = surnameText.text else {return}
         guard let email = emailText.text else {return}
         guard let password = passwordText.text else {return}
-           viewModel.username = username
+           viewModel.username = username //TODO: bunlari vm'de set ele
            viewModel.surname = surname
            viewModel.email = email
            viewModel.password = password

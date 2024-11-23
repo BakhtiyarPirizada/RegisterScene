@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RealmSwift
+import RealmSwift // istifdae eleme
 class MainController: BaseViewController {
     
     private var viewModel = MainViewModel()
@@ -132,18 +132,25 @@ class MainController: BaseViewController {
             self.cardCollection.reloadData()
         }
     }
+  
     @objc func addCardClicked() {
         viewModel.createCard()
         collectionViewReload()
+        
     }
     @objc func deleteCardClicked() {
         viewModel.deleteRealm(index: selectedIndex)
         collectionViewReload()
     }
     @objc func transferClicked() {
-        let controller  = TransferController()
+        let controller  = TransferController(viewModel: TransferViewModel())
         navigationController?.pushViewController(controller, animated: true)
+    }
+    @objc func scrollToLast() {
+        let newIndexPath = IndexPath(item: viewModel.cards!.count - 1, section: 0)
+        self.cardCollection.scrollToItem(at:  newIndexPath, at: .centeredHorizontally, animated: true)
         
+//        guard let item = viewModel.cards?[viewModel.cards!.count - 1] else {return}
     }
     
 }
@@ -166,6 +173,7 @@ extension MainController:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         }else {
             cell.typeImage.image = .master
         }
+        collectionViewReload()
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

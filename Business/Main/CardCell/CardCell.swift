@@ -14,7 +14,6 @@ class CardCell: UICollectionViewCell {
         configureUI()
         configureConstraints()
     }
-    fileprivate var viewModel = MainViewModel()
  
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

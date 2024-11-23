@@ -8,11 +8,8 @@
 import UIKit
 
 import UIKit
-import RealmSwift
 
 class BaseViewController: UIViewController {
-    
-    private let realm = try! Realm()
     
     private lazy var BGImage: UIImageView = {
         let i = UIImageView()

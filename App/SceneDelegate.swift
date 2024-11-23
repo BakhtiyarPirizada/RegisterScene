@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return newWindow
     }
     private func showRegister(scene: UIWindowScene) -> UIWindow  {
-        let controller = RegisterController(viewModel: AuthViewModel())
+        let controller = RegisterController(viewModel: .init())
         let navigationController = UINavigationController(rootViewController: controller)
         let newWindow = UIWindow(windowScene: scene)
         newWindow.rootViewController = navigationController

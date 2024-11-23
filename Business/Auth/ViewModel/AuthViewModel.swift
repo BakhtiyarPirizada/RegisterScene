@@ -12,6 +12,7 @@ final class AuthViewModel {
     
     enum ViewState {
         case error(message:String)
+        case toLogin(email: String , password: String)
     }
     var callback:((ViewState)->Void)?
     private var Users: Results<User>?
@@ -31,8 +32,8 @@ final class AuthViewModel {
         user.email = email
         user.password = password
         writeRealm(model: user)
+        callback?(.toLogin(email: email, password: password))
         getList()
-  
     }
     
     func checkUser() -> Bool {
@@ -49,6 +50,7 @@ final class AuthViewModel {
         guard number.isValidPhoneNumber() else {return showError(message: "Phone number must be 994 format")}
         guard email.isValidEmail() else {return showError(message: "Email must be email format")}
         guard password.isValidPass() else {return showError(message: "Password must be minimum 8 characters")}
+        
         createUser()
         
     }
@@ -60,6 +62,10 @@ final class AuthViewModel {
     func getList() {
         let results = realm.objects(User.self)
         Users = results
+    }
+    
+    func setUser(model: String) {
+        
     }
     
     func writeRealm(model:Object) {
