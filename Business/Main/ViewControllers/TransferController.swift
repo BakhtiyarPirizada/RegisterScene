@@ -98,7 +98,7 @@ class TransferController: BaseViewController {
         b.setImage(UIImage(systemName: "chevron.down.circle"), for: .normal)
         b.tintColor = .gray
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.addTarget(self, action: #selector(downClicked), for: .touchUpInside)
+        b.addTarget(self, action: #selector(downFromClicked), for: .touchUpInside)
         return b
     }()
     private lazy var downToSelect: UIButton = {
@@ -106,7 +106,7 @@ class TransferController: BaseViewController {
         b.setImage(UIImage(systemName: "chevron.down.circle"), for: .normal)
         b.tintColor = .gray
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.addTarget(self, action: #selector(downClicked), for: .touchUpInside)
+        b.addTarget(self, action: #selector(downToClicked), for: .touchUpInside)
         return b
     }()
     private lazy var transferButton: ReusableButton = {
@@ -153,9 +153,23 @@ class TransferController: BaseViewController {
         ])
         
     }
-    @objc fileprivate func transferClicked() {}
-    @objc fileprivate func downClicked() {
-        let listController = CardListController(viewModel:CardListViewModel())
+    @objc fileprivate func transferClicked() {
+        viewModel.amount = Int(String( amountText.text ?? "")) ?? 0
+        viewModel.transfer()
+    }
+    @objc fileprivate func downFromClicked() {
+        let listController = CardListController(viewModel:TransferViewModel())
+        listController.isFrom = true
+        listController.modalPresentationStyle = .pageSheet
+        if let sheet = listController.sheetPresentationController {
+            sheet.detents = [.medium(),.large()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(listController, animated: true)
+    }
+    @objc fileprivate func downToClicked() {
+        let listController = CardListController(viewModel:TransferViewModel())
+        listController.isFrom = false
         listController.modalPresentationStyle = .pageSheet
         if let sheet = listController.sheetPresentationController {
             sheet.detents = [.medium(),.large()]

@@ -13,6 +13,7 @@ final class MainViewModel {
     }
     
     var cards: Results<Card>?
+    
     private let realm = try! Realm()
     fileprivate var isVisa = Bool.random()
     var callback:((ViewState)->Void)?
