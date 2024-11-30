@@ -26,14 +26,14 @@ class CardListCell: UITableViewCell {
         panLabel.text = pan
         balanceLabel.text = balance
     }
-    lazy var typeImage: UIImageView = {
+    fileprivate lazy var typeImage: UIImageView = {
         let i = UIImageView()
         i.alpha = 1
         i.contentMode = .scaleAspectFill
         i.translatesAutoresizingMaskIntoConstraints = false
         return i
     }()
-    lazy var panLabel: UILabel = {
+    fileprivate  lazy var panLabel: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 14)
         l.textColor = .black
@@ -42,7 +42,7 @@ class CardListCell: UITableViewCell {
         return l
     }()
    
-    lazy var balanceLabel: UILabel = {
+    fileprivate lazy var balanceLabel: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 18)
         l.textColor = .blue

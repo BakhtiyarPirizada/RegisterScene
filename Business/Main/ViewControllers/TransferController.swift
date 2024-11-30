@@ -154,12 +154,19 @@ class TransferController: BaseViewController {
         
     }
     @objc fileprivate func transferClicked() {
-        viewModel.amount = Int(String( amountText.text ?? "")) ?? 0
+        guard let amount = amountText.text else {return}
+        viewModel.amount = Int(String(amount)) ?? 0
         viewModel.transfer()
+        navigationController?.popViewController(animated: true)
     }
     @objc fileprivate func downFromClicked() {
         let listController = CardListController(viewModel:TransferViewModel())
-        listController.isFrom = true
+        listController.cardsender = { [weak self] card in
+            guard let self else {return}
+            selectFromLabel.text = card.pan
+            viewModel.selectedCardTo = card
+        }
+        
         listController.modalPresentationStyle = .pageSheet
         if let sheet = listController.sheetPresentationController {
             sheet.detents = [.medium(),.large()]
@@ -169,7 +176,11 @@ class TransferController: BaseViewController {
     }
     @objc fileprivate func downToClicked() {
         let listController = CardListController(viewModel:TransferViewModel())
-        listController.isFrom = false
+        listController.cardsender = { [weak self] card in
+            guard let self else {return}
+            selectToLabel.text = card.pan
+            viewModel.selectedCardFrom = card
+        }
         listController.modalPresentationStyle = .pageSheet
         if let sheet = listController.sheetPresentationController {
             sheet.detents = [.medium(),.large()]

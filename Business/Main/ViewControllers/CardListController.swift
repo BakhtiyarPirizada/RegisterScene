@@ -8,8 +8,11 @@
 import UIKit
 
 class CardListController: UIViewController {
+    
     private let viewModel: TransferViewModel
-    var isFrom = Bool()
+    
+    var cardsender: ((Card)->Void)?
+    
     init(viewModel: TransferViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -62,13 +65,9 @@ extension CardListController: UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isFrom == true {
-            viewModel.selectedCardFrom = (viewModel.cards?[indexPath.row])!
-        }
-        else {
-            viewModel.selectedCardTo = (viewModel.cards?[indexPath.row])!
-        }
-        navigationController?.popViewController(animated: true)
+        guard let card = viewModel.cards?[indexPath.row] else {return}
+        cardsender?(card)
+        navigationController?.dismiss(animated: true)
   }
     
     

@@ -18,6 +18,9 @@ final class TransferViewModel {
         cards =  RealmHelper.instance.getList(of: Card.self)
     }
     func transfer() {
+        print(selectedCardFrom)
+        print(selectedCardTo)
+        print(amount)
         RealmHelper.instance.updateObject {
             selectedCardFrom.balance -= amount
             selectedCardTo.balance += amount
