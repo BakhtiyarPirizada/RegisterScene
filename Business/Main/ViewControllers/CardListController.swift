@@ -67,7 +67,7 @@ extension CardListController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let card = viewModel.cards?[indexPath.row] else {return}
         cardsender?(card)
-        navigationController?.dismiss(animated: true)
+        dismiss(animated: true)
   }
     
     

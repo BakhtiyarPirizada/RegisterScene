@@ -123,6 +123,7 @@ class TransferController: BaseViewController {
     override func configureUI() {
         super.configureUI()
         view.addViews(view: [selectToContainer,selectFromContainer, amountText,transferButton])
+        configureViewModel()
         amountText.delegate = self
     }
     override func configureConstraints() {
@@ -153,11 +154,22 @@ class TransferController: BaseViewController {
         ])
         
     }
+    fileprivate func configureViewModel() {
+        viewModel.callback = { [weak self] state in
+            switch state {
+            case .error(let message):
+                self?.showMessage(message: message)
+            case .succsess:
+                self?.navigationController?.popViewController(animated: true)
+                
+            }
+        }
+    }
     @objc fileprivate func transferClicked() {
         guard let amount = amountText.text else {return}
         viewModel.amount = Int(String(amount)) ?? 0
-        viewModel.transfer()
-        navigationController?.popViewController(animated: true)
+        viewModel.checkValidation()
+        
     }
     @objc fileprivate func downFromClicked() {
         let listController = CardListController(viewModel:TransferViewModel())

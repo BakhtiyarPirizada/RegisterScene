@@ -14,6 +14,7 @@ class BaseViewController: UIViewController {
     private lazy var BGImage: UIImageView = {
         let i = UIImageView()
         i.image = .bg
+        i.backgroundColor = .bg
         i.alpha = 1
         i.contentMode = .scaleAspectFill
         i.translatesAutoresizingMaskIntoConstraints = false
@@ -31,6 +32,7 @@ class BaseViewController: UIViewController {
             BGImage.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             BGImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         ])
+       
         
     }
     

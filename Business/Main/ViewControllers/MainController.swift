@@ -76,8 +76,7 @@ class MainController: BaseViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        let realm = try! Realm()
-        print("Realm is located at:", realm.configuration.fileURL!)
+        
     }
     override func configureUI() {
         super.configureUI()
@@ -99,16 +98,16 @@ class MainController: BaseViewController {
             
         ])
         NSLayoutConstraint.activate([
-            addCard.heightAnchor.constraint(equalToConstant: 40),
-            addCard.widthAnchor.constraint(equalToConstant: 40)
+            addCard.heightAnchor.constraint(equalToConstant: 60),
+            addCard.widthAnchor.constraint(equalToConstant: 60)
         ])
         NSLayoutConstraint.activate([
-            deleteCard.heightAnchor.constraint(equalToConstant: 40),
-            deleteCard.widthAnchor.constraint(equalToConstant: 40)
+            deleteCard.heightAnchor.constraint(equalToConstant: 60),
+            deleteCard.widthAnchor.constraint(equalToConstant: 60)
         ])
         NSLayoutConstraint.activate([
-            transfer.heightAnchor.constraint(equalToConstant: 40),
-            transfer.widthAnchor.constraint(equalToConstant: 40)
+            transfer.heightAnchor.constraint(equalToConstant: 60),
+            transfer.widthAnchor.constraint(equalToConstant: 60)
         ])
         
     }
