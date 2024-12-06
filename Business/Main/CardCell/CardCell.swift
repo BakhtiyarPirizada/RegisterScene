@@ -26,6 +26,14 @@ class CardCell: UICollectionViewCell {
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
+    lazy var balanceLabel: UILabel = {
+        let l = UILabel()
+        l.font = .systemFont(ofSize: 20)
+        l.textColor = .white
+        l.text = "10 Azn"
+        l.translatesAutoresizingMaskIntoConstraints = false
+        return l
+    }()
     lazy var dateLabel: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 20)
@@ -43,6 +51,7 @@ class CardCell: UICollectionViewCell {
         i.addSubview(panLabel)
         i.addSubview(dateLabel)
         i.addSubview(typeImage)
+        i.addSubview(balanceLabel)
         i.translatesAutoresizingMaskIntoConstraints = false
         return i
     }()
@@ -77,11 +86,26 @@ class CardCell: UICollectionViewCell {
             dateLabel.leftAnchor.constraint(equalTo: panLabel.rightAnchor, constant:40)
 
         ])
+        NSLayoutConstraint.activate([
+            balanceLabel.centerYAnchor.constraint(equalToSystemSpacingBelow: typeImage.centerYAnchor, multiplier: 0),
+            balanceLabel.leftAnchor.constraint(equalTo: BGImage.leftAnchor, constant:40)
+
+        ])
+        
     }
     fileprivate func configureUI() {
         self.backgroundColor = .card
         contentView.addSubview(BGImage)
     }
-
+    func configureCell(pan:String,date:String,balance:String,type:CardType?) {
+        panLabel.text = pan
+        dateLabel.text = date
+        balanceLabel.text = balance
+        if type == .visa {
+            typeImage.image = .visa
+        }else {
+            typeImage.image = .master
+        }
+    }
     
 }

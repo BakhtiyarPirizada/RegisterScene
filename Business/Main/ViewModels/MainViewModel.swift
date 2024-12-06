@@ -5,36 +5,33 @@
 //  Created by Bakhtiyar Pirizada on 18.11.24.
 //
 import Foundation
-import RealmSwift
 
 final class MainViewModel {
     enum ViewState {
+        case loading
+        case loaded
         case error(message:String)
+        case success
     }
     
-    var cards: Results<Card>?
+    var cards = RealmHelper.instance.getList(of: Card.self)
     
-    private let realm = try! Realm()
+  
     fileprivate var isVisa = Bool.random()
     var callback:((ViewState)->Void)?
     
     
     func getList() {
-        let results = realm.objects(Card.self)
+        let results = RealmHelper.instance.realm.objects(Card.self)
         cards = results
     }
     
-    func writeRealm(model:Object) {
-        try! realm.write {
-            realm.add(model)
-        }
+    func writeRealm(model:Card) {
+        RealmHelper.instance.addObject(model)
     }
     func deleteRealm(index: Int) {
-        guard cards?.count ?? 0 > 1 else { return showMessage(message: "Minimum 1 debit kart olmalidir")}
-        guard let card = cards?[index] else {return}
-        try! realm.write {
-            realm.delete(card)
-        }
+        guard cards.count > 1 else { return showMessage(message: "Minimum 1 debit kart olmalidir")}
+        RealmHelper.instance.deleteObject(cards[index])
     }
     func showMessage(message: String) {
         callback?(.error(message: message))
@@ -58,5 +55,6 @@ final class MainViewModel {
         writeRealm(model: card)
         getList()
         isVisa = Bool.random()
+        callback?(.success)
     }
 }

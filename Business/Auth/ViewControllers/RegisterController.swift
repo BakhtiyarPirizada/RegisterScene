@@ -4,12 +4,15 @@
 //
 //  Created by Bakhtiyar Pirizada on 02.11.24.
 //
+protocol UserFieldDelegate:AnyObject {
+    func success(email:String,password:String) }
 
 import UIKit
-import RealmSwift // ?? helper yazimali idi!
 class RegisterController: BaseViewController {
     
-    private var viewModel = AuthViewModel()
+    private var viewModel: AuthViewModel
+    
+    weak var delegate:UserFieldDelegate?
     
     init(viewModel: AuthViewModel) {
         self.viewModel = viewModel
@@ -130,9 +133,7 @@ class RegisterController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let realm = try! Realm()
-        print("Realm is located at:", realm.configuration.fileURL!)
-        
+        print(RealmHelper.instance.realm.configuration.fileURL!)
     }
     
     override func configureUI() {
@@ -193,7 +194,7 @@ class RegisterController: BaseViewController {
     fileprivate func configureViewModel() {
         viewModel.callback = { [weak self] state in
             switch state {
-            case .error(let message):
+            case .errorToRegister(let message):
                 self?.showMessage(title: message)
             default: break
             }
@@ -205,8 +206,10 @@ class RegisterController: BaseViewController {
     }
     
     @objc fileprivate func signUpClicked() {
-        viewModel.checkValidation()
-        showLogin()
+        if viewModel.checkValidation() {
+            delegate?.success(email: emailText.text ?? "srdfs",password: passwordText.text ?? "sdvsd")
+            showLogin()
+        }
     }
     
     @objc fileprivate func togglePasswordVisibility() {

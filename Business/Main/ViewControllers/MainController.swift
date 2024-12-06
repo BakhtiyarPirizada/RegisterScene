@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RealmSwift // istifdae eleme
 class MainController: BaseViewController {
     
     private var viewModel = MainViewModel()
@@ -123,6 +122,9 @@ class MainController: BaseViewController {
             switch state {
             case .error(let message):
                 self?.showMessage(title: message)
+            case .success:
+                self?.collectionViewReload()
+            default: break
             }
         }
     }
@@ -131,11 +133,9 @@ class MainController: BaseViewController {
             self.cardCollection.reloadData()
         }
     }
-  
+    
     @objc func addCardClicked() {
         viewModel.createCard()
-        collectionViewReload()
-        
     }
     @objc func deleteCardClicked() {
         viewModel.deleteRealm(index: selectedIndex)
@@ -144,19 +144,19 @@ class MainController: BaseViewController {
     @objc func transferClicked() {
         let controller  = TransferController(viewModel: TransferViewModel())
         navigationController?.pushViewController(controller, animated: true)
+        controller.delegate = self
     }
     @objc func scrollToLast() {
-        let newIndexPath = IndexPath(item: viewModel.cards!.count - 1, section: 0)
+        let newIndexPath = IndexPath(item: viewModel.cards.count - 1, section: 0)
         self.cardCollection.scrollToItem(at:  newIndexPath, at: .centeredHorizontally, animated: true)
-        
-//        guard let item = viewModel.cards?[viewModel.cards!.count - 1] else {return}
+        //        guard let item = viewModel.cards?[viewModel.cards!.count - 1] else {return}
     }
     
 }
 extension MainController:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.getList()
-        return viewModel.cards?.count ?? 1
+        return viewModel.cards.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -164,19 +164,17 @@ extension MainController:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         cell.layer.cornerRadius = 12
         selectedIndex = indexPath.row
         viewModel.getList()
-        guard let card = viewModel.cards?[indexPath.row] else { return cell }
-        cell.panLabel.text = card.pan ?? "asdfgh"
-        cell.dateLabel.text = card.date ?? "asfdgfhgjhmhngbfdvs"
-        if card.cardType == .visa {
-            cell.typeImage.image = .visa
-        }else {
-            cell.typeImage.image = .master
-        }
-        collectionViewReload()
+        let card = viewModel.cards[indexPath.row] 
+        cell.configureCell(pan: card.pan ?? "", date: card.date ?? "", balance:String(card.balance), type: card.cardType)
+        print(#function,"**********")
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
-    
+}
+extension MainController:TransferDelegate{
+    func succsess() {
+        collectionViewReload()
+    }
 }

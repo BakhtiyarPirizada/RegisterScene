@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import RealmSwift
 class LoginController: BaseViewController {
    
     private var viewModel : AuthViewModel
@@ -112,17 +111,16 @@ class LoginController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureDelegate()
     }
     
     override func configureUI() {
         super.configureUI()
-        view.addSubview(titleLabel)
-        view.addSubview(scrollView)
-        view.addSubview(loginButton)
-        view.addSubview(newMemberLabel)
+        view.addViews(view: [titleLabel,scrollView,loginButton,newMemberLabel])
         configureConstraints()
         configureText()
         configureViewModel()
+        
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
@@ -169,32 +167,29 @@ class LoginController: BaseViewController {
     
     fileprivate func configureText() {
         [emailText,passwordText].forEach {$0.delegate = self}
+    
     }
     
     fileprivate func configureViewModel() {
         viewModel.callback = { [weak self] state in
             switch state {
-         case .toLogin(email: let email, password: let password):
-                self?.emailText.text = email
-                self?.passwordText.text = password
+            case .errorToLogin(let message):
+                self?.showMessage(title: message)
             default: break
             }
         }
+    }
+    fileprivate func configureDelegate() {
+        let controller = RegisterController(viewModel: viewModel.self)
+        controller.delegate = self
     }
     
     @objc fileprivate func loginClicked() {
         viewModel.logEmail = emailText.text ?? ""
         viewModel.logPassword =  passwordText.text ?? ""
-        //TODO: bu yoxlanishlari vm'de edirsen sonrada state atirsan ona gore ekran deyushir
-        if !emailText.text!.isEmpty && !passwordText.text!.isEmpty {
-            if viewModel.checkUser() {
-                UserDefaultsHelper.setBool(key: "isLogin", value: true)
-                let scene = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
-                scene?.switchToMain()
-            } else {
-                UserDefaultsHelper.setBool(key: "isLogin", value: false)
-                showMessage(title: "Warning",message: "User is not found")}
-        } else {showMessage(title: "Warning",message: "Fields cannot be emtpy")}
+        if viewModel.loginValidations() {
+            let scene = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate
+            scene?.switchToMain()}
     }
     
     @objc fileprivate func togglePasswordVisibility() {
@@ -206,11 +201,12 @@ class LoginController: BaseViewController {
         navigationController?.popViewController(animated: true)
     }
 }
-
-extension LoginController: UITextFieldDelegate {
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//
-//    }
+extension LoginController: UITextFieldDelegate {}
+extension LoginController:UserFieldDelegate {
+    func success(email: String, password: String) {
+        emailText.text = email
+        passwordText.text = password
+    }
 }
 
 

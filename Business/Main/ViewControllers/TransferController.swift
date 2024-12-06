@@ -4,13 +4,15 @@
 //
 //  Created by Bakhtiyar Pirizada on 19.11.24.
 //
-
+protocol TransferDelegate:AnyObject{
+    func succsess()
+}
 import UIKit
 
 class TransferController: BaseViewController {
     
     private var viewModel : TransferViewModel
-    
+    weak var delegate:TransferDelegate?
     init(viewModel: TransferViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -161,6 +163,7 @@ class TransferController: BaseViewController {
                 self?.showMessage(message: message)
             case .succsess:
                 self?.navigationController?.popViewController(animated: true)
+            default: break
                 
             }
         }
@@ -168,7 +171,9 @@ class TransferController: BaseViewController {
     @objc fileprivate func transferClicked() {
         guard let amount = amountText.text else {return}
         viewModel.amount = Int(String(amount)) ?? 0
-        viewModel.checkValidation()
+        if viewModel.checkValidation() {
+            delegate?.succsess()
+        }
         
     }
     @objc fileprivate func downFromClicked() {

@@ -6,9 +6,18 @@
 //
 import Foundation
 import RealmSwift
+
 enum CardType: String, PersistableEnum {
-    case visa = "Visa"
-    case master = "MasterCard"
+    case visa
+    case master
+    var imageName: String {
+        switch self {
+        case .visa:
+            return "Visa"
+        case .master:
+            return "MasterCard"
+        }
+    }
 }
 class Card: Object {
     @Persisted(primaryKey: true) var _id: ObjectId

@@ -5,18 +5,21 @@
 //  Created by Bakhtiyar Pirizada on 09.11.24.
 //
 
-import RealmSwift
 import Foundation
 
 final class AuthViewModel {
     
     enum ViewState {
-        case error(message:String)
-        case toLogin(email: String , password: String)
+        case errorToRegister(message:String)
+        case errorToLogin(message:String)
+        case success
+        case loading
+        case loaded
     }
     var callback:((ViewState)->Void)?
-    private var Users: Results<User>?
-    private let realm = try! Realm()
+    
+    private var users = RealmHelper.instance.getList(of: User.self)
+    
     lazy var username = ""
     lazy var surname = ""
     lazy var email = ""
@@ -32,46 +35,56 @@ final class AuthViewModel {
         user.email = email
         user.password = password
         writeRealm(model: user)
-        callback?(.toLogin(email: email, password: password))
         getList()
     }
     
     func checkUser() -> Bool {
         getList()
-        guard let users = Users else {return false}
         return users.contains {$0.email == logEmail && $0.password == logPassword}
     }
     
-    func checkValidation() {
-        guard !username.isEmpty,!surname.isEmpty,!number.isEmpty,!email.isEmpty , !password.isEmpty
-        else {return showError(message: "Fields cannot be emtpy")}
-        guard username.isValidName() else {return showError(message: "Username must be minimum 3 characters")}
-        guard surname.isValidLastname() else {return showError(message: "Surname must be minimum 5 characters")}
-        guard number.isValidPhoneNumber() else {return showError(message: "Phone number must be 994 format")}
-        guard email.isValidEmail() else {return showError(message: "Email must be email format")}
-        guard password.isValidPass() else {return showError(message: "Password must be minimum 8 characters")}
-        
-        createUser()
-        
+    func loginValidations() -> Bool {
+        guard !logEmail.isEmpty && !logPassword.isEmpty else { showErrorLogin(message: "Fields cannot be emtpy")
+            return false }
+        guard checkUser() else {showErrorLogin(message: "User is not found!"); UserDefaultsHelper.setBool(key: "isLogin", value: false)
+            return false }
+        UserDefaultsHelper.setBool(key: "isLogin", value: true)
+        return true
+
     }
     
-    func showError(message:String) {
-        callback?(.error(message: message))
+    func checkValidation() -> Bool {
+        guard !username.isEmpty,!surname.isEmpty,!number.isEmpty,!email.isEmpty , !password.isEmpty
+        else { showErrorRegister(message: "Fields cannot be emtpy")
+            return false}
+        guard username.isValidName() else {showErrorRegister(message: "Username must be minimum 3 characters")
+            return false}
+        guard surname.isValidLastname() else {showErrorRegister(message: "Surname must be minimum 5 characters")
+            return false}
+        guard number.isValidPhoneNumber() else {showErrorRegister(message: "Phone number must be 994 format")
+            return false}
+        guard email.isValidEmail() else { showErrorRegister(message: "Email must be email format")
+            return false}
+        guard password.isValidPass() else { showErrorRegister(message: "Password must be minimum 8 characters")
+            return false}
+        createUser()
+        return true
+    }
+    
+    func showErrorRegister(message:String) {
+        callback?(.errorToRegister(message: message))
+    }
+    
+    func showErrorLogin(message:String) {
+        callback?(.errorToLogin(message: message))
     }
     
     func getList() {
-        let results = realm.objects(User.self)
-        Users = results
+        users = RealmHelper.instance.getList(of: User.self)
     }
-    
-    func setUser(model: String) {
-        
-    }
-    
-    func writeRealm(model:Object) {
-        try! realm.write {
-            realm.add(model)
-        }
+   
+    func writeRealm(model:User) {
+        RealmHelper.instance.addObject(model)
     }
     
 }

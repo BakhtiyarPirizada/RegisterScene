@@ -10,7 +10,7 @@ import UIKit
 final class RealmHelper {
     static let instance = RealmHelper()
     private init() {}
-    
+  
     let realm = try! Realm()
     
     //MARK: Add

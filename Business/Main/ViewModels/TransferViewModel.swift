@@ -4,16 +4,19 @@
 //
 //  Created by Bakhtiyar Pirizada on 20.11.24.
 //
+
+
 import Foundation
-import RealmSwift
 
 final class TransferViewModel {
     enum ViewState {
+        case loading
+        case loaded
         case error(message:String)
         case succsess
     }
     var callback:((ViewState)->Void)?
-    private(set) var cards: Results<Card>?
+    private(set) var cards = RealmHelper.instance.getList(of: Card.self)
     var selectedCardFrom = Card()
     var selectedCardTo = Card()
     var amount = Int()
@@ -28,14 +31,20 @@ final class TransferViewModel {
         }
     }
     
-    func checkValidation() {
-        guard selectedCardFrom != selectedCardTo else {return showError(message: "Eyni kart secile bilmez")}
-        guard selectedCardFrom.balance != 0 else {return showError(message: "Kartin balansi bosdur")}
-        guard amount < selectedCardFrom.balance else {return showError(message: "Balansda kifayet qeder vesait yoxdur")}
-        guard amount >= 1 else {return showError(message: "Mebleg minimum 1 azn olmalidir")}
+    func checkValidation() -> Bool {
+        guard selectedCardFrom != selectedCardTo else {showError(message: "Eyni kart secile bilmez")
+            return false }
+        guard selectedCardFrom.balance != 0 else { showError(message: "Kartin balansi bosdur")
+            return false }
+        guard amount <= selectedCardFrom.balance else {showError(message: "Balansda kifayet qeder vesait yoxdur")
+            return false }
+        guard amount >= 1 else { showError(message: "Mebleg minimum 1 azn olmalidir")
+            return false}
        
         transfer()
         callback?(.succsess)
+        return true
+        
     }
     
     func showError(message:String) {

@@ -51,13 +51,13 @@ class CardListController: UIViewController {
 extension CardListController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.getList()
-        return  viewModel.cards?.count ?? 0
+        return  viewModel.cards.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = cardTable.dequeueReusableCell(withIdentifier: "CardListCell") as? CardListCell ?? CardListCell()
         viewModel.getList()
-        guard let card = viewModel.cards?[indexPath.row] else {return cell}
+        let card = viewModel.cards[indexPath.row]
         cell.configureCell(
             image: UIImage(named: "\(card.cardType!)") ?? .add,
             pan: "**** **** **** \(card.pan?.last4Chars ?? "****")",
@@ -65,7 +65,7 @@ extension CardListController: UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let card = viewModel.cards?[indexPath.row] else {return}
+       let card = viewModel.cards[indexPath.row] 
         cardsender?(card)
         dismiss(animated: true)
   }
