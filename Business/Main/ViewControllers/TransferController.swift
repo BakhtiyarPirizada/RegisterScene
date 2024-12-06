@@ -181,29 +181,26 @@ class TransferController: BaseViewController {
         listController.cardsender = { [weak self] card in
             guard let self else {return}
             selectFromLabel.text = card.pan
-            viewModel.selectedCardTo = card
+            viewModel.selectedCardFrom = card
         }
-        
-        listController.modalPresentationStyle = .pageSheet
-        if let sheet = listController.sheetPresentationController {
-            sheet.detents = [.medium(),.large()]
-            sheet.prefersGrabberVisible = true
-        }
-        present(listController, animated: true)
+        showCardList(controller: listController)
     }
     @objc fileprivate func downToClicked() {
         let listController = CardListController(viewModel:TransferViewModel())
         listController.cardsender = { [weak self] card in
             guard let self else {return}
             selectToLabel.text = card.pan
-            viewModel.selectedCardFrom = card
+            viewModel.selectedCardTo = card
         }
-        listController.modalPresentationStyle = .pageSheet
-        if let sheet = listController.sheetPresentationController {
+        showCardList(controller: listController)
+    }
+    fileprivate func showCardList(controller:UIViewController) {
+        controller.modalPresentationStyle = .pageSheet
+        if let sheet = controller.sheetPresentationController {
             sheet.detents = [.medium(),.large()]
             sheet.prefersGrabberVisible = true
         }
-        present(listController, animated: true)
+        present(controller, animated: true)
     }
 
 }

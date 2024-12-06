@@ -10,7 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var isLogin: Bool = /*UserDefaultsHelper.getBool(key: "isLogin") */ false
+    var isLogin: Bool = /*UserDefaultsHelper.getBool(key: "isLogin") */ true
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
